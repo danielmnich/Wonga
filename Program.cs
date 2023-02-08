@@ -1,11 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using NuGet.Protocol.Core.Types;
+using Wonga.Commands;
+using Wonga.Models;
+using Wonga.Queries;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<UserContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("LocalDb")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IUserCommands, UserCommands>();
+builder.Services.AddScoped<IUserQueries, UserQueries>();
 
 var app = builder.Build();
 
